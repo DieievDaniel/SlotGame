@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RowSlots : MonoBehaviour
 {
+    [SerializeField] private UIManager manager;
+
     private int randomValue;
     private float timeInterval;
     private bool rowStopped;

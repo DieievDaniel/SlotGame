@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +5,7 @@ public class VictoryChecker : MonoBehaviour
 {
     [SerializeField] private RowSlots[] rows;
     [SerializeField] private UIManager uIManager;
+    [SerializeField] private BetAndWinnings betAndWinnings;
 
     private bool resultsChecked = false;
 
@@ -39,64 +39,43 @@ public class VictoryChecker : MonoBehaviour
 
     public void CheckResults()
     {
-        if (rows[0]._stoppedSlot == "Diamond" && rows[1]._stoppedSlot == "Diamond" && rows[2]._stoppedSlot == "Diamond")
+        Dictionary<string, int> slotCounts = new Dictionary<string, int>();
+
+        // Count occurrences of each slot type in the rows
+        foreach (var row in rows)
         {
-            uIManager.UpdatePrizeValue(200);
+            string slot = row._stoppedSlot;
+            if (!string.IsNullOrEmpty(slot))
+            {
+                if (slotCounts.ContainsKey(slot))
+                {
+                    slotCounts[slot]++;
+                }
+                else
+                {
+                    slotCounts[slot] = 1;
+                }
+            }
         }
-        else if (rows[0]._stoppedSlot == "Crown" && rows[1]._stoppedSlot == "Crown" && rows[2]._stoppedSlot == "Crown")
+
+        foreach (var slotCount in slotCounts)
         {
-            uIManager.UpdatePrizeValue(400);
-        }
-        else if (rows[0]._stoppedSlot == "Melon" && rows[1]._stoppedSlot == "Melon" && rows[2]._stoppedSlot == "Melon")
-        {
-            uIManager.UpdatePrizeValue(600);
-        }
-        else if (rows[0]._stoppedSlot == "Bar" && rows[1]._stoppedSlot == "Bar" && rows[2]._stoppedSlot == "Bar")
-        {
-            uIManager.UpdatePrizeValue(800);
-        }
-        else if (rows[0]._stoppedSlot == "Seven" && rows[1]._stoppedSlot == "Seven" && rows[2]._stoppedSlot == "Seven")
-        {
-            uIManager.UpdatePrizeValue(1500);
-        }
-        else if (rows[0]._stoppedSlot == "Cherry" && rows[1]._stoppedSlot == "Cherry" && rows[2]._stoppedSlot == "Cherry")
-        {
-            uIManager.UpdatePrizeValue(3000);
-        }
-        else if (rows[0]._stoppedSlot == "Lemon" && rows[1]._stoppedSlot == "Lemon" && rows[2]._stoppedSlot == "Lemon")
-        {
-            uIManager.UpdatePrizeValue(5000);
-        }
-        else if (((rows[0]._stoppedSlot == rows[1]._stoppedSlot) && (rows[0]._stoppedSlot == "Diamond")) || ((rows[0]._stoppedSlot == rows[2]._stoppedSlot) && (rows[0]._stoppedSlot == "Diamond")) || ((rows[1]._stoppedSlot == rows[2]._stoppedSlot) && (rows[1]._stoppedSlot == "Diamond")))
-        {
-            uIManager.UpdatePrizeValue(100);
-        }
-        else if (((rows[0]._stoppedSlot == rows[1]._stoppedSlot) && (rows[0]._stoppedSlot == "Crown")) || ((rows[0]._stoppedSlot == rows[2]._stoppedSlot) && (rows[0]._stoppedSlot == "Crown")) || ((rows[1]._stoppedSlot == rows[2]._stoppedSlot) && (rows[1]._stoppedSlot == "Crown")))
-        {
-            uIManager.UpdatePrizeValue(300);
-        }
-        else if (((rows[0]._stoppedSlot == rows[1]._stoppedSlot) && (rows[0]._stoppedSlot == "Melon")) || ((rows[0]._stoppedSlot == rows[2]._stoppedSlot) && (rows[0]._stoppedSlot == "Melon")) || ((rows[1]._stoppedSlot == rows[2]._stoppedSlot) && (rows[1]._stoppedSlot == "Melon")))
-        {
-            uIManager.UpdatePrizeValue(500);
-        }
-        else if (((rows[0]._stoppedSlot == rows[1]._stoppedSlot) && (rows[0]._stoppedSlot == "Bar")) || ((rows[0]._stoppedSlot == rows[2]._stoppedSlot) && (rows[0]._stoppedSlot == "Bar")) || ((rows[1]._stoppedSlot == rows[2]._stoppedSlot) && (rows[1]._stoppedSlot == "Bar")))
-        {
-            uIManager.UpdatePrizeValue(700);
-        }
-        else if (((rows[0]._stoppedSlot == rows[1]._stoppedSlot) && (rows[0]._stoppedSlot == "Seven")) || ((rows[0]._stoppedSlot == rows[2]._stoppedSlot) && (rows[0]._stoppedSlot == "Seven")) || ((rows[1]._stoppedSlot == rows[2]._stoppedSlot) && (rows[1]._stoppedSlot == "Seven")))
-        {
-            uIManager.UpdatePrizeValue(1000);
-        }
-        else if (((rows[0]._stoppedSlot == rows[1]._stoppedSlot) && (rows[0]._stoppedSlot == "Cherry")) || ((rows[0]._stoppedSlot == rows[2]._stoppedSlot) && (rows[0]._stoppedSlot == "Cherry")) || ((rows[1]._stoppedSlot == rows[2]._stoppedSlot) && (rows[1]._stoppedSlot == "Cherry")))
-        {
-            uIManager.UpdatePrizeValue(2000);
-        }
-        else if (((rows[0]._stoppedSlot == rows[1]._stoppedSlot) && (rows[0]._stoppedSlot == "Lemon")) || ((rows[0]._stoppedSlot == rows[2]._stoppedSlot) && (rows[0]._stoppedSlot == "Lemon")) || ((rows[1]._stoppedSlot == rows[2]._stoppedSlot) && (rows[1]._stoppedSlot == "Lemon")))
-        {
-            uIManager.UpdatePrizeValue(4000);
+            if (slotCount.Value == 3) // Three matching slots
+            {
+                uIManager.UpdatePrizeValue(winValues[slotCount.Key]);
+                betAndWinnings.CalculateWinnings();
+                resultsChecked = true;
+                return;
+            }
+            else if (slotCount.Value == 2) // Two matching slots
+            {
+                uIManager.UpdatePrizeValue(partialWinValues[slotCount.Key]);
+                betAndWinnings.CalculateWinnings();
+                resultsChecked = true;
+                return;
+            }
         }
 
         resultsChecked = true;
     }
-
 }

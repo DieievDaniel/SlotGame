@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
-using TMPro;
+
 
 public class GameControl : MonoBehaviour
 {
@@ -11,6 +9,7 @@ public class GameControl : MonoBehaviour
     [SerializeField] private RowSlots[] rows;
     [SerializeField] private UIManager uIManager;
     [SerializeField] private VictoryChecker victoryChecker;
+    [SerializeField] private BetAndWinnings betAndWinnings;
 
 
     #region MONO
@@ -20,7 +19,7 @@ public class GameControl : MonoBehaviour
         if (!rows[0]._rowStopped || !rows[1]._rowStopped || !rows[2]._rowStopped)
         {
             uIManager._prizeText.enabled = false;
-            uIManager.UpdatePrizeValue(uIManager._prizeValue);
+            uIManager.UpdatePrizeValue(betAndWinnings._prizeValue);
             victoryChecker._resultsChecked = false;
         }
 
@@ -28,7 +27,7 @@ public class GameControl : MonoBehaviour
         {
             victoryChecker.CheckResults();
             uIManager._prizeText.enabled = true;
-            uIManager.UpdatePrizeValue(uIManager._prizeValue);
+            uIManager.UpdatePrizeValue(betAndWinnings._prizeValue);
         }
     }
 
@@ -39,6 +38,7 @@ public class GameControl : MonoBehaviour
         if (rows[0]._rowStopped && rows[1]._rowStopped && rows[2]._rowStopped)
         {
             ButtonClicked();
+            betAndWinnings.DeductBalanceOnSpin(100 * betAndWinnings._bet);
         }
     }
 

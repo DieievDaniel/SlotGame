@@ -6,6 +6,7 @@ public class VictoryChecker : MonoBehaviour
     [SerializeField] private RowSlots[] rows;
     [SerializeField] private UIManager uIManager;
     [SerializeField] private BetAndWinnings betAndWinnings;
+    [SerializeField] private GameControl gameControl;
 
     private bool resultsChecked = false;
 
@@ -65,6 +66,7 @@ public class VictoryChecker : MonoBehaviour
                 uIManager.UpdatePrizeValue(winValues[slotCount.Key]);
                 betAndWinnings.CalculateWinnings();
                 resultsChecked = true;
+                gameControl.BonusSpin();
                 return;
             }
             else if (slotCount.Value == 2) // Two matching slots

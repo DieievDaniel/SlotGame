@@ -42,8 +42,8 @@ public class RowSlots : MonoBehaviour
         rowStopped = false;
         timeInterval = 0.025f; // time interval between changing every slot position in a row
         float endRowSlot = -1f; // end slot line position
-        float startRowSlot = 1.3f; // start slot line position
-        float stepRowSpin = 0.2f; // every small spin between two slots
+        float startRowSlot = 1.2f; // start slot line position
+        float stepRowSpin = 0.3f; // every small spin between two slots
 
         // Setting initial position
         float currentY = transform.position.y;

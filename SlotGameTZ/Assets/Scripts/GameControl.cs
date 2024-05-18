@@ -43,5 +43,13 @@ public class GameControl : MonoBehaviour
             musicManager.PlaySpinSound();
         }
     }
+    public void BonusSpin()
+    {
+        if (rows[0]._rowStopped && rows[1]._rowStopped && rows[2]._rowStopped)
+        {
+            ButtonClicked();
+            musicManager.PlaySpinSound();
+        }
+    }
 
 }

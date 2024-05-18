@@ -10,6 +10,7 @@ public class GameControl : MonoBehaviour
     [SerializeField] private UIManager uIManager;
     [SerializeField] private VictoryChecker victoryChecker;
     [SerializeField] private BetAndWinnings betAndWinnings;
+    [SerializeField] private MusicManager musicManager;
 
 
     #region MONO
@@ -39,6 +40,7 @@ public class GameControl : MonoBehaviour
         {
             ButtonClicked();
             betAndWinnings.DeductBalanceOnSpin(100 * betAndWinnings._bet);
+            musicManager.PlaySpinSound();
         }
     }
 
